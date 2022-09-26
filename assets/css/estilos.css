@@ -1,0 +1,58 @@
+body {
+  font-family: "Raleway", sans-serif;
+}
+
+#angelopaolodegradado {
+  color: transparent;
+  font-size: 50px;
+  font-weight: 600;
+  letter-spacing: -0,015em;
+  background-image: linear-gradient(
+    180deg,
+    #FFD700,
+    #FFA500
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+a, footer{
+  text-decoration: none;
+  color: white;
+}
+
+/* Hero Section */
+
+#Hero-Section {
+  background-image: url("../img/richard-horvath-RAZU_R66vUc-unsplash.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left;
+}
+
+/* Mis trabajos */
+
+#Mis-trabajos .image-top {
+  height: 800px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Contacto */
+
+#Contacto form label {
+  font-weight: 700;
+  color: #373a3c;
+}
+
+@media (max-width: 768px) {
+  #Contacto form label {
+    font-weight: 400;
+  }
+
+  .navbar-brand{
+    width: 100px;
+  }
+
+}
