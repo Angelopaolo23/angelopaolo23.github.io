@@ -1,0 +1,35 @@
+{
+  "name": "raios-background-component",
+  "version": "1.0.0",
+  "description": "Componente de fondo animado para Marketplace Raios con efectos eléctricos",
+  "main": "RaiosBackground.jsx",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "react",
+    "background",
+    "animation",
+    "raios",
+    "marketplace",
+    "electric",
+    "gold",
+    "tailwind"
+  ],
+  "author": "Angelo Paolo Bugueño",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {}
+}

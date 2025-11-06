@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raios Background - Demo Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .demo-content {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin: 40px auto;
+            max-width: 800px;
+            text-align: left;
+        }
+
+        .controls h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #D4AF37;
+            font-size: 1.8rem;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #D4AF37;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .control-group input[type="range"] {
+            padding: 0;
+            height: 8px;
+            cursor: pointer;
+        }
+
+        .control-group input[type="color"] {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .value-display {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-left: 10px;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #D4AF37;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .preset-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .preset-btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .control-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-content > * {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .demo-content > *:nth-child(1) { animation-delay: 0.2s; }
+        .demo-content > *:nth-child(2) { animation-delay: 0.4s; }
+        .demo-content > *:nth-child(3) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor del background con atributos configurables -->
+    <div id="raios-bg" data-raios-background
+         data-dot-count="12"
+         data-distribution="random"
+         data-min-size="150"
+         data-max-size="400"
+         data-blur="80"
+         data-animation-duration="3"
+         data-gold-color="#D4AF37">
+
+        <div class="demo-content">
+            <h1>⚡ RAIOS</h1>
+            <p class="subtitle">Marketplace de Arte con Energía Eléctrica</p>
+
+            <!-- Panel de Control -->
+            <div class="controls">
+                <h2>🎛️ Panel de Control</h2>
+
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>
+                            Cantidad de Puntos
+                            <span class="value-display" id="dotCountValue">12</span>
+                        </label>
+                        <input type="range" id="dotCount" min="5" max="30" value="12">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Distribución</label>
+                        <select id="distribution">
+                            <option value="random">Aleatoria</option>
+                            <option value="grid">Cuadrícula</option>
+                            <option value="scattered">Dispersa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>
+                            Tamaño Mínimo (px)
+                            <span class="value-display" id="minSizeValue">150</span>
+                        </label>
+                        <input type="range" id="minSize" min="50" max="300" value="150">
+                    </div>
+
+                    <div class="control-group">
+                        <label>
+                            Tamaño Máximo (px)
+                            <span class="value-display" id="maxSizeValue">400</span>
+                        </label>
+                        <input type="range" id="maxSize" min="200" max="600" value="400">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-group">
+                        <label>
+                            Intensidad Blur (px)
+                            <span class="value-display" id="blurValue">80</span>
+                        </label>
+                        <input type="range" id="blur" min="20" max="150" value="80">
+                    </div>
+
+                    <div class="control-group">
+                        <label>
+                            Duración Animación (s)
+                            <span class="value-display" id="durationValue">3</span>
+                        </label>
+                        <input type="range" id="duration" min="1" max="8" step="0.5" value="3">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Color Dorado</label>
+                    <input type="color" id="goldColor" value="#D4AF37">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" onclick="applyChanges()">✨ Aplicar Cambios</button>
+                    <button class="btn btn-secondary" onclick="resetToDefault()">🔄 Resetear</button>
+                </div>
+
+                <!-- Presets -->
+                <div class="preset-buttons">
+                    <button class="btn preset-btn" onclick="applyPreset('minimal')">Minimal</button>
+                    <button class="btn preset-btn" onclick="applyPreset('intense')">Intenso</button>
+                    <button class="btn preset-btn" onclick="applyPreset('grid')">Grid</button>
+                    <button class="btn preset-btn" onclick="applyPreset('cosmic')">Cósmico</button>
+                </div>
+            </div>
+
+            <!-- Características -->
+            <div class="features">
+                <div class="feature-card">
+                    <h3>⚡ Alto Rendimiento</h3>
+                    <p>Optimizado con animaciones CSS puras para mantener 60 FPS constantes sin comprometer la experiencia visual.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🎨 Personalizable</h3>
+                    <p>Controla cada aspecto: cantidad, tamaño, color, distribución y velocidad de animación.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📱 Responsive</h3>
+                    <p>Se adapta perfectamente a cualquier tamaño de pantalla, desde móviles hasta pantallas 4K.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🚀 Fácil Integración</h3>
+                    <p>Disponible en React y Vanilla JS. Simplemente importa y usa con configuración por atributos.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Script del componente -->
+    <script src="raios-background.js"></script>
+
+    <!-- Script de controles -->
+    <script>
+        let raiosInstance;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            const element = document.getElementById('raios-bg');
+            raiosInstance = new RaiosBackground(element);
+
+            // Actualizar displays de valores
+            updateValueDisplays();
+        });
+
+        // Actualizar displays de valores
+        function updateValueDisplays() {
+            document.getElementById('dotCountValue').textContent =
+                document.getElementById('dotCount').value;
+            document.getElementById('minSizeValue').textContent =
+                document.getElementById('minSize').value;
+            document.getElementById('maxSizeValue').textContent =
+                document.getElementById('maxSize').value;
+            document.getElementById('blurValue').textContent =
+                document.getElementById('blur').value;
+            document.getElementById('durationValue').textContent =
+                document.getElementById('duration').value;
+        }
+
+        // Event listeners para sliders
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+            input.addEventListener('input', updateValueDisplays);
+        });
+
+        // Aplicar cambios
+        function applyChanges() {
+            const config = {
+                dotCount: parseInt(document.getElementById('dotCount').value),
+                distribution: document.getElementById('distribution').value,
+                minDotSize: parseInt(document.getElementById('minSize').value),
+                maxDotSize: parseInt(document.getElementById('maxSize').value),
+                blur: parseInt(document.getElementById('blur').value),
+                animationDuration: parseFloat(document.getElementById('duration').value),
+                goldColor: document.getElementById('goldColor').value
+            };
+
+            // Actualizar instancia
+            if (raiosInstance) {
+                // Remover estilos antiguos
+                const oldStyle = document.getElementById('raios-background-styles');
+                if (oldStyle) oldStyle.remove();
+
+                // Recrear instancia
+                const element = document.getElementById('raios-bg');
+                raiosInstance = new RaiosBackground(element, config);
+            }
+
+            // Feedback visual
+            showNotification('✨ Cambios aplicados correctamente');
+        }
+
+        // Resetear a valores por defecto
+        function resetToDefault() {
+            document.getElementById('dotCount').value = 12;
+            document.getElementById('distribution').value = 'random';
+            document.getElementById('minSize').value = 150;
+            document.getElementById('maxSize').value = 400;
+            document.getElementById('blur').value = 80;
+            document.getElementById('duration').value = 3;
+            document.getElementById('goldColor').value = '#D4AF37';
+
+            updateValueDisplays();
+            applyChanges();
+
+            showNotification('🔄 Configuración reseteada');
+        }
+
+        // Presets
+        function applyPreset(preset) {
+            const presets = {
+                minimal: {
+                    dotCount: 6,
+                    distribution: 'scattered',
+                    minSize: 200,
+                    maxSize: 350,
+                    blur: 60,
+                    duration: 4,
+                    color: '#D4AF37'
+                },
+                intense: {
+                    dotCount: 25,
+                    distribution: 'random',
+                    minSize: 100,
+                    maxSize: 300,
+                    blur: 100,
+                    duration: 2,
+                    color: '#FFD700'
+                },
+                grid: {
+                    dotCount: 16,
+                    distribution: 'grid',
+                    minSize: 150,
+                    maxSize: 250,
+                    blur: 70,
+                    duration: 3.5,
+                    color: '#DAA520'
+                },
+                cosmic: {
+                    dotCount: 15,
+                    distribution: 'scattered',
+                    minSize: 180,
+                    maxSize: 450,
+                    blur: 120,
+                    duration: 5,
+                    color: '#B8860B'
+                }
+            };
+
+            const config = presets[preset];
+            if (config) {
+                document.getElementById('dotCount').value = config.dotCount;
+                document.getElementById('distribution').value = config.distribution;
+                document.getElementById('minSize').value = config.minSize;
+                document.getElementById('maxSize').value = config.maxSize;
+                document.getElementById('blur').value = config.blur;
+                document.getElementById('duration').value = config.duration;
+                document.getElementById('goldColor').value = config.color;
+
+                updateValueDisplays();
+                applyChanges();
+
+                showNotification(`🎨 Preset "${preset}" aplicado`);
+            }
+        }
+
+        // Notificación
+        function showNotification(message) {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #D4AF37, #FFD700);
+                color: #000;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: 700;
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+            `;
+
+            document.body.appendChild(notification);
+
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Animaciones CSS para notificación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+</body>
+</html>
