@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ RAIOS - Background Demo Interactiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Estilos del Background Raios */
+        .raios-background {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        .raios-dots-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .raios-dot {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle at center,
+                #D4AF37 0%,
+                #D4AF37CC 20%,
+                #D4AF3766 40%,
+                transparent 70%
+            );
+            filter: blur(80px);
+            animation: pulse-raios 3s ease-in-out infinite;
+            transform: translate(-50%, -50%);
+            opacity: 0.7;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        @keyframes pulse-raios {
+            0% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
+
+        .raios-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(
+                circle at center,
+                #D4AF37FF 0%,
+                transparent 70%
+            );
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: inner-glow 1.8s ease-in-out infinite;
+        }
+
+        @keyframes inner-glow {
+            0%, 100% {
+                opacity: 0.4;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        .raios-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Estilos del contenido */
+        .demo-content {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            letter-spacing: 2px;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .controls {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            margin: 40px auto;
+            max-width: 800px;
+            text-align: left;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .controls h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #D4AF37;
+            font-size: 1.8rem;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #D4AF37;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .control-group input[type="range"] {
+            padding: 0;
+            height: 8px;
+            cursor: pointer;
+        }
+
+        .control-group input[type="color"] {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .value-display {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            padding: 4px 12px;
+            border-radius: 6px;
+            margin-left: 10px;
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .preset-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .preset-btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #D4AF37;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .feature-card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .control-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="raios-bg" class="raios-background">
+        <div class="raios-dots-container" id="dotsContainer"></div>
+
+        <div class="raios-content">
+            <div class="demo-content">
+                <h1>⚡ RAIOS</h1>
+                <p class="subtitle">Marketplace de Arte con Energía Eléctrica</p>
+
+                <!-- Panel de Control -->
+                <div class="controls">
+                    <h2>🎛️ Panel de Control</h2>
+
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>
+                                Cantidad de Puntos
+                                <span class="value-display" id="dotCountValue">12</span>
+                            </label>
+                            <input type="range" id="dotCount" min="5" max="30" value="12">
+                        </div>
+
+                        <div class="control-group">
+                            <label>Distribución</label>
+                            <select id="distribution">
+                                <option value="random">Aleatoria</option>
+                                <option value="grid">Cuadrícula</option>
+                                <option value="scattered">Dispersa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>
+                                Tamaño Mínimo (px)
+                                <span class="value-display" id="minSizeValue">150</span>
+                            </label>
+                            <input type="range" id="minSize" min="50" max="300" value="150">
+                        </div>
+
+                        <div class="control-group">
+                            <label>
+                                Tamaño Máximo (px)
+                                <span class="value-display" id="maxSizeValue">400</span>
+                            </label>
+                            <input type="range" id="maxSize" min="200" max="600" value="400">
+                        </div>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label>
+                                Intensidad Blur (px)
+                                <span class="value-display" id="blurValue">80</span>
+                            </label>
+                            <input type="range" id="blur" min="20" max="150" value="80">
+                        </div>
+
+                        <div class="control-group">
+                            <label>
+                                Duración Animación (s)
+                                <span class="value-display" id="durationValue">3</span>
+                            </label>
+                            <input type="range" id="duration" min="1" max="8" step="0.5" value="3">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Color Dorado</label>
+                        <input type="color" id="goldColor" value="#D4AF37">
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn" onclick="applyChanges()">✨ Aplicar Cambios</button>
+                        <button class="btn btn-secondary" onclick="resetToDefault()">🔄 Resetear</button>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="preset-buttons">
+                        <button class="btn preset-btn" onclick="applyPreset('minimal')">Minimal</button>
+                        <button class="btn preset-btn" onclick="applyPreset('intense')">Intenso</button>
+                        <button class="btn preset-btn" onclick="applyPreset('grid')">Grid</button>
+                        <button class="btn preset-btn" onclick="applyPreset('cosmic')">Cósmico</button>
+                    </div>
+                </div>
+
+                <!-- Características -->
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>⚡ Alto Rendimiento</h3>
+                        <p>Optimizado con animaciones CSS puras para mantener 60 FPS constantes sin comprometer la experiencia visual.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>🎨 Personalizable</h3>
+                        <p>Controla cada aspecto: cantidad, tamaño, color, distribución y velocidad de animación.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>📱 Responsive</h3>
+                        <p>Se adapta perfectamente a cualquier tamaño de pantalla, desde móviles hasta pantallas 4K.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3>🚀 Fácil Integración</h3>
+                        <p>Disponible en React y Vanilla JS. Simplemente importa y usa con configuración por atributos.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración actual
+        let config = {
+            dotCount: 12,
+            distribution: 'random',
+            minDotSize: 150,
+            maxDotSize: 400,
+            blur: 80,
+            animationDuration: 3,
+            goldColor: '#D4AF37',
+            spacing: 100
+        };
+
+        // Generar posición según distribución
+        function calculatePosition(index, config) {
+            const { distribution, spacing, dotCount } = config;
+            let position = { x: 0, y: 0 };
+
+            switch (distribution) {
+                case 'grid':
+                    const cols = Math.ceil(Math.sqrt(dotCount));
+                    const row = Math.floor(index / cols);
+                    const col = index % cols;
+                    position = {
+                        x: spacing + (col * spacing * 3),
+                        y: spacing + (row * spacing * 3)
+                    };
+                    break;
+
+                case 'scattered':
+                    const angle = (index / dotCount) * Math.PI * 2;
+                    const radius = 20 + Math.random() * 60;
+                    position = {
+                        x: 50 + Math.cos(angle) * radius,
+                        y: 50 + Math.sin(angle) * radius
+                    };
+                    break;
+
+                case 'random':
+                default:
+                    position = {
+                        x: Math.random() * 100,
+                        y: Math.random() * 100
+                    };
+                    break;
+            }
+
+            return position;
+        }
+
+        // Generar puntos
+        function generateDots() {
+            const container = document.getElementById('dotsContainer');
+            container.innerHTML = '';
+
+            for (let i = 0; i < config.dotCount; i++) {
+                const position = calculatePosition(i, config);
+                const size = config.minDotSize + Math.random() * (config.maxDotSize - config.minDotSize);
+                const delay = Math.random() * config.animationDuration;
+
+                const dot = document.createElement('div');
+                dot.className = 'raios-dot';
+                dot.style.left = `${position.x}%`;
+                dot.style.top = `${position.y}%`;
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                dot.style.animationDelay = `${delay}s`;
+                dot.style.animationDuration = `${config.animationDuration}s`;
+                dot.style.filter = `blur(${config.blur}px)`;
+
+                // Crear gradiente con el color seleccionado
+                const color = config.goldColor;
+                dot.style.background = `radial-gradient(
+                    circle at center,
+                    ${color} 0%,
+                    ${color}CC 20%,
+                    ${color}66 40%,
+                    transparent 70%
+                )`;
+
+                container.appendChild(dot);
+            }
+        }
+
+        // Actualizar displays de valores
+        function updateValueDisplays() {
+            document.getElementById('dotCountValue').textContent = document.getElementById('dotCount').value;
+            document.getElementById('minSizeValue').textContent = document.getElementById('minSize').value;
+            document.getElementById('maxSizeValue').textContent = document.getElementById('maxSize').value;
+            document.getElementById('blurValue').textContent = document.getElementById('blur').value;
+            document.getElementById('durationValue').textContent = document.getElementById('duration').value;
+        }
+
+        // Event listeners para sliders
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+            input.addEventListener('input', updateValueDisplays);
+        });
+
+        // Aplicar cambios
+        function applyChanges() {
+            config = {
+                dotCount: parseInt(document.getElementById('dotCount').value),
+                distribution: document.getElementById('distribution').value,
+                minDotSize: parseInt(document.getElementById('minSize').value),
+                maxDotSize: parseInt(document.getElementById('maxSize').value),
+                blur: parseInt(document.getElementById('blur').value),
+                animationDuration: parseFloat(document.getElementById('duration').value),
+                goldColor: document.getElementById('goldColor').value,
+                spacing: 100
+            };
+
+            generateDots();
+            showNotification('✨ Cambios aplicados correctamente');
+        }
+
+        // Resetear a valores por defecto
+        function resetToDefault() {
+            document.getElementById('dotCount').value = 12;
+            document.getElementById('distribution').value = 'random';
+            document.getElementById('minSize').value = 150;
+            document.getElementById('maxSize').value = 400;
+            document.getElementById('blur').value = 80;
+            document.getElementById('duration').value = 3;
+            document.getElementById('goldColor').value = '#D4AF37';
+
+            updateValueDisplays();
+            applyChanges();
+            showNotification('🔄 Configuración reseteada');
+        }
+
+        // Presets
+        function applyPreset(preset) {
+            const presets = {
+                minimal: {
+                    dotCount: 6,
+                    distribution: 'scattered',
+                    minSize: 200,
+                    maxSize: 350,
+                    blur: 60,
+                    duration: 4,
+                    color: '#D4AF37'
+                },
+                intense: {
+                    dotCount: 25,
+                    distribution: 'random',
+                    minSize: 100,
+                    maxSize: 300,
+                    blur: 100,
+                    duration: 2,
+                    color: '#FFD700'
+                },
+                grid: {
+                    dotCount: 16,
+                    distribution: 'grid',
+                    minSize: 150,
+                    maxSize: 250,
+                    blur: 70,
+                    duration: 3.5,
+                    color: '#DAA520'
+                },
+                cosmic: {
+                    dotCount: 15,
+                    distribution: 'scattered',
+                    minSize: 180,
+                    maxSize: 450,
+                    blur: 120,
+                    duration: 5,
+                    color: '#B8860B'
+                }
+            };
+
+            const presetConfig = presets[preset];
+            if (presetConfig) {
+                document.getElementById('dotCount').value = presetConfig.dotCount;
+                document.getElementById('distribution').value = presetConfig.distribution;
+                document.getElementById('minSize').value = presetConfig.minSize;
+                document.getElementById('maxSize').value = presetConfig.maxSize;
+                document.getElementById('blur').value = presetConfig.blur;
+                document.getElementById('duration').value = presetConfig.duration;
+                document.getElementById('goldColor').value = presetConfig.color;
+
+                updateValueDisplays();
+                applyChanges();
+                showNotification(`🎨 Preset "${preset}" aplicado`);
+            }
+        }
+
+        // Notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Inicialización
+        window.addEventListener('DOMContentLoaded', () => {
+            generateDots();
+            updateValueDisplays();
+        });
+    </script>
+
+</body>
+</html>
